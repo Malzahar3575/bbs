@@ -27,6 +27,8 @@ const Menu = () => {
                         className="me-auto my-2 my-lg-0"
                         style={{ maxHeight: '100px' }}
                         navbarScroll
+
+                        
                     >
                         <Nav.Link href="/books">도서검색</Nav.Link>
                         <Nav.Link href="/cart">장바구니</Nav.Link>
