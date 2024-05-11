@@ -16,7 +16,7 @@ const Login = () => {
     const onChange = (e) =>{
         setForm({
             ...form,
-            [e.target.name]:[e.target.value]
+            [e.target.name]: e.target.value
         });
     }
     const onSubmit = (e) => {
@@ -26,13 +26,21 @@ const Login = () => {
         }else{
             //로그인체크
             setLoading(true);
+            // console.log(email);
             signInWithEmailAndPassword(auth, email, pass)
             .then(success=>{
                 setLoading(false);
                 sessionStorage.setItem("email", email);
+                sessionStorage.setItem('uid', success.user.uid)
                 // alert("로그인성공");
-                navi('/');
-                // navi(-1); //이전화면
+                const target = sessionStorage.getItem('target');
+                if(target){
+                    navi(target);
+                    sessionStorage.removeItem('target');
+                }else{
+                    navi('/');
+                }
+                //navi(-1); //이전화면
                 
             })
             .catch(err=>{
