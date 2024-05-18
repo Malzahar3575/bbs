@@ -36,9 +36,9 @@ const Cart = () => {
     return (
         <div>
             <h1 className='my-5'>장바구니</h1>
-            <Table>
+            <Table  bordered hover>
                 <thead>
-                    <tr>
+                    <tr className='text-center'>
                         <td colSpan={2}>도서제목</td>
                         <td>가격</td>
                         <td>저자</td>
@@ -51,8 +51,8 @@ const Cart = () => {
                             <td><img src={book.thumbnail} width={"30px"}/></td>
                             <td>{book.title}</td>
                             <td>{book.price}</td>
-                            <td>{book.authors}</td>
-                            <td><Button variant='danger' className='btn-sm' onClick={()=>{onClickDelete(book)}}>삭제</Button></td>
+                            <td>{book.authors.join()}</td>
+                            <td className='text-center'><Button variant='danger' className='btn-sm' onClick={()=>{onClickDelete(book)}}>삭제</Button></td>
                         </tr>
                     )}
                 </tbody>

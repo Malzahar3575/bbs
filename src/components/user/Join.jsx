@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import {Row, Col, Form, InputGroup, Card, Button} from 'react-bootstrap'
 import {app} from '../../firebaseInit'
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword} from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 
-const Login = () => {
+const Join = () => {
     const navi = useNavigate();
     const [loading, setLoading] = useState(false);
     const auth = getAuth(app);
@@ -24,28 +24,17 @@ const Login = () => {
         if(email==="" || pass===""){
             alert("이메일과 비밀번호를 입력하세요!");
         }else{
-            //로그인체크
+            //회원가입
             setLoading(true);
-            // console.log(email);
-            signInWithEmailAndPassword(auth, email, pass)
+            createUserWithEmailAndPassword(auth, email, pass)
             .then(success=>{
+                alert("회원가입 성공!");
                 setLoading(false);
-                sessionStorage.setItem("email", email);
-                sessionStorage.setItem('uid', success.user.uid)
-                // alert("로그인성공");
-                const target = sessionStorage.getItem('target');
-                if(target){
-                    navi(target);
-                    sessionStorage.removeItem('target');
-                }else{
-                    navi('/');
-                }
-                //navi(-1); //이전화면
-                
+                navi('/login')                
             })
             .catch(err=>{
+                alert(`에러:${err.message}`);                
                 setLoading(false);
-                alert(`로그인에러:${err.message}`);                
             })
             
         }
@@ -56,7 +45,7 @@ const Login = () => {
             <Col md={7} lg={5}>
                 <Card>
                     <Card.Header>
-                        <h3 className='text-center'>로그인</h3>
+                        <h3 className='text-center'>회원가입</h3>
                     </Card.Header>
                     <Card.Body>
                         <form onSubmit={onSubmit}>
@@ -72,12 +61,10 @@ const Login = () => {
                                 </InputGroup.Text>
                                 <Form.Control name='pass' type='password' value={pass}  onChange={onChange}/>
                             </InputGroup>
-                            <div className='my-2'>
-                                <Button type='submit' className='w-100'>로그인</Button>
+                            <div>
+                                <Button type='submit' className='w-100'>회원가입</Button>
                             </div>
-                            <div className='text-end'>
-                                <a href="/join">회원가입</a>
-                            </div>
+
                         </form>
 
                     </Card.Body>
@@ -87,4 +74,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Join
