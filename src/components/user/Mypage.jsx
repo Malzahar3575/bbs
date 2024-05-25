@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import {Row, Col, Card, Button, InputGroup, Form} from 'react-bootstrap'
+import {app} from '../../firebaseInit'
+import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 const Mypage = () => {
     const [form, setForm] = useState({
@@ -41,7 +43,7 @@ const Mypage = () => {
                         <h3 className='text-center'>마이페이지</h3>
                     </Card.Header>
                     <Card.Body>
-                        <form>
+                        <form onSubmit={onSubmit}>
                             <InputGroup className='mb-2'>
                                 <InputGroup.Text>이름</InputGroup.Text>
                                 <Form.Control name="name" value={name} onChange={onChangeForm}/>
@@ -58,7 +60,7 @@ const Mypage = () => {
                             <Form.Control  name="address2" value={address2} onChange={onChangeForm}
                              placeholder='상세주소'/>
                             <div className='text-center mt-3'>
-                                <Button className='px-5'>저장</Button>
+                                <Button type='submit' className='px-5'>저장</Button>
                                 <Button variant='secondary' className = 'ms-2 px-5'>취소</Button>
                             </div>
                         </form>
