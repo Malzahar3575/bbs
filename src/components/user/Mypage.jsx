@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {Row, Col, Card, Button, InputGroup, Form} from 'react-bootstrap'
 import {app} from '../../firebaseInit'
-import { getFirestore, doc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, setDoc, getDoc} from 'firebase/firestore'
+import ModalAddress from './ModalAddress'
+import ModalPhoto from './ModalPhoto'
 
 const Mypage = () => {
+    const [loading, setLoading] = useState(false);
+    const uid=sessionStorage.getItem('uid');
+    const db = getFirestore(app);
     const [form, setForm] = useState({
+        email:sessionStorage.getItem('email'),
         name:"무기명",
         phone:"010-1234-1212",
         address1:'인천 서구 경서동 현대아파트',
@@ -13,6 +19,14 @@ const Mypage = () => {
 
     const {name, phone, address1, address2} = form;
 
+    const callAPI = async() => {
+        setLoading(true);
+        const res = await getDoc(doc(db, `users/${uid}`));
+        if(res.data()){
+            setForm(res.data());
+        }
+        setLoading(false);
+    }
     const onChangeForm = (e) => {
         setForm(
             {
@@ -22,7 +36,7 @@ const Mypage = () => {
         )
 
     }
-    const onSubmit = (e) => {
+    const onSubmit = async(e) => {
         e.preventDefault();
         if(name === ""){
             alert("이름을 입력하세요.");
@@ -33,7 +47,16 @@ const Mypage = () => {
         }
         //정보를 저장
         console.log(form);
+        setLoading(true);
+        await setDoc(doc(db,`users/${uid}`), form);
+        setLoading(false);
     }
+
+    useEffect(() => {
+        callAPI();
+    },[])
+
+    if(loading) return <h1 className='text-center my-5'>로딩중...</h1>
     return (
         <div>
         <Row className='justify-content-center my-5'>
@@ -43,6 +66,9 @@ const Mypage = () => {
                         <h3 className='text-center'>마이페이지</h3>
                     </Card.Header>
                     <Card.Body>
+                        <div className='text-center'>
+                            <ModalPhoto setLoading={setLoading} form={form} setForm={setForm}/>
+                        </div>
                         <form onSubmit={onSubmit}>
                             <InputGroup className='mb-2'>
                                 <InputGroup.Text>이름</InputGroup.Text>
@@ -55,7 +81,7 @@ const Mypage = () => {
                             <InputGroup className='mb-1'>
                                 <InputGroup.Text>주소</InputGroup.Text>
                                 <Form.Control name="address1" value={address1} onChange={onChangeForm}/>
-                                <Button>검색</Button>
+                                <ModalAddress form={form} setForm={setForm}/>
                             </InputGroup>
                             <Form.Control  name="address2" value={address2} onChange={onChangeForm}
                              placeholder='상세주소'/>
