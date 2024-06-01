@@ -10,7 +10,7 @@ const ModalPhoto = ({setLoading, form, setForm}) => {
     const storage = getStorage(app);
     const db = getFirestore(app);
     const uid = sessionStorage.getItem('uid');
-    const [fileName, setFileName] = useState("");
+    const [fileName, setFileName] = useState(form.photo);
     const [file, setFile] = useState(null);
     const [show, setShow] = useState(false);
 
